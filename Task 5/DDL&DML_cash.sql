@@ -72,7 +72,7 @@ Employee_phone_number VARCHAR
 INSERT
 	INTO
 	sa_cash_orders.src_cash_orders
-SELECT
+SELECT DISTINCT --added distinct updated
 	*
 FROM
 	sa_cash_orders.ext_cash_orders ;

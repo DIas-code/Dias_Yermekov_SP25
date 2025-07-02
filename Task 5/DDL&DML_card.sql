@@ -83,7 +83,7 @@ Channel_Desc VARCHAR
 INSERT
 	INTO
 	sa_card_orders.src_card_orders
-SELECT
+SELECT DISTINCT --added distinct updated
 	*
 FROM
 	sa_card_orders.ext_card_orders ;
