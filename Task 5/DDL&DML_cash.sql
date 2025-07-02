@@ -8,7 +8,9 @@ CREATE SERVER IF NOT EXISTS csv_file_server FOREIGN DATA WRAPPER file_fdw;
 CREATE FOREIGN TABLE IF NOT EXISTS sa_cash_orders.ext_cash_orders(
 Order_ID VARCHAR,
 Order_date VARCHAR,
+Prod_code VARCHAR,
 Prod_name VARCHAR,
+Prod_category_code VARCHAR,
 Prod_category VARCHAR,
 Prod_Price VARCHAR,
 Quantity VARCHAR,
@@ -28,11 +30,11 @@ Employee_last_name VARCHAR,
 Employee_DOB VARCHAR,
 Employee_personal_ID VARCHAR,
 Employee_phone_number VARCHAR
-) SERVER csv_file_server OPTIONS (filename 'C:\Program Files\PostgreSQL\17\data\source_1.csv', --path to the file
+) SERVER csv_file_server OPTIONS (filename 'C:\Program Files\PostgreSQL\17\data\cash_source.csv', --path to the file
 format 'csv',
 HEADER 'true' );
 
---DROP FOREIGN TABLE sa_card_orders.ext_card_orders;
+--DROP FOREIGN TABLE sa_cash_orders.ext_cash_orders;
 
 --SELECT * FROM sa_card_orders.ext_card_orders eco ;
 
@@ -40,7 +42,9 @@ HEADER 'true' );
 CREATE TABLE IF NOT EXISTS sa_cash_orders.src_cash_orders (
 Order_ID VARCHAR,
 Order_date VARCHAR,
+Prod_code VARCHAR,
 Prod_name VARCHAR,
+Prod_category_code VARCHAR,
 Prod_category VARCHAR,
 Prod_Price VARCHAR,
 Quantity VARCHAR,
@@ -61,6 +65,8 @@ Employee_DOB VARCHAR,
 Employee_personal_ID VARCHAR,
 Employee_phone_number VARCHAR
 );
+
+--DROP TABLE sa_cash_orders.src_cash_orders;
 
 --inserting data into src table from external table
 INSERT

@@ -11,7 +11,9 @@ CREATE SERVER IF NOT EXISTS csv_file_server FOREIGN DATA WRAPPER file_fdw;
 CREATE FOREIGN TABLE IF NOT EXISTS sa_card_orders.ext_card_orders(
 Order_ID VARCHAR,
 Order_date VARCHAR,
+Prod_code VARCHAR,
 Prod_name VARCHAR,
+Prod_category_code VARCHAR,
 Prod_category VARCHAR,
 Prod_Price VARCHAR,
 Quantity VARCHAR,
@@ -35,7 +37,7 @@ Emp_personal_ID VARCHAR,
 Emp_phone_number VARCHAR,
 Channel_Name VARCHAR,
 Channel_Desc VARCHAR
-) SERVER csv_file_server OPTIONS (filename 'C:\Program Files\PostgreSQL\17\data\source_2.csv',
+) SERVER csv_file_server OPTIONS (filename 'C:\Program Files\PostgreSQL\17\data\card_source.csv',
 format 'csv',
 HEADER 'true' );
 
@@ -47,7 +49,9 @@ HEADER 'true' );
 CREATE TABLE IF NOT EXISTS sa_card_orders.src_card_orders (
 Order_ID VARCHAR,
 Order_date VARCHAR,
+Prod_code VARCHAR,
 Prod_name VARCHAR,
+Prod_category_code VARCHAR,
 Prod_category VARCHAR,
 Prod_Price VARCHAR,
 Quantity VARCHAR,
@@ -72,6 +76,8 @@ Emp_phone_number VARCHAR,
 Channel_Name VARCHAR,
 Channel_Desc VARCHAR
 );
+
+--DROP TABLE sa_cash_orders.src_car_orders;
 
 --inserting data into src table from external table
 INSERT
