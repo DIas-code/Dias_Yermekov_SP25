@@ -56,6 +56,7 @@ values ('Alice', 'Not fired');
 -- third transaction
 begin;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
 SHOW TRANSACTION ISOLATION LEVEL;
 select *, xmin, xmax, cmin, cmax
 from public.employee e;
@@ -66,12 +67,9 @@ from public.employee e;
 commit;
 
 /*
-In REPEATABLE READ, Session B doesn’t see changes made by Session A 
-until Session B commits and starts a new transaction.
-
-And vice versa:
-Session A also doesn’t see changes made by Session B 
-until it commits and starts a new transaction.
+Session B doesn’t see changes made by Session A 
+until Session B starts a new transaction (after A has committed)
+And vice versa
 */
 
 /*

@@ -37,7 +37,7 @@ SHOW TRANSACTION ISOLATION LEVEL;
 select txid_current();
 
 update public.employee
-set status = 'Тще Fired'
+set status = '2Yes2 Fired'
 where id = 2;
 
 select *, xmin, xmax, cmin, cmax
