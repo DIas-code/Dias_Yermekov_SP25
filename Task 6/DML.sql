@@ -101,8 +101,6 @@ WHERE
 	WHERE
 		emp_id = -1
 );
-
-
 -- ce_countries
 INSERT
 	INTO
@@ -1055,21 +1053,21 @@ INSERT INTO bl_3nf.ce_categories (
 )
 SELECT 
     NEXTVAL('bl_3nf.seq_ce_categories'),
-    COALESCE(prod_category, 'n.a.'),
+    COALESCE(prod_category_code, 'n.a.'),
     COALESCE(prod_category, 'n.a.'),
     'cash_orders',
     'src_cash_orders',
     CURRENT_DATE,
     CURRENT_DATE
 FROM (
-    SELECT DISTINCT prod_category
+    SELECT DISTINCT prod_category_code, prod_category
     FROM sa_cash_orders.src_cash_orders
     WHERE prod_category IS NOT NULL
 ) sc
 WHERE NOT EXISTS (
     SELECT 1
     FROM bl_3nf.ce_categories c
-    WHERE c.category_src_id = sc.prod_category
+    WHERE c.category_src_id = sc.prod_category_code
       AND c.source_system = 'cash_orders'
       AND c.source_entity = 'src_cash_orders'
 );
@@ -1086,21 +1084,21 @@ INSERT INTO bl_3nf.ce_categories (
 )
 SELECT 
     NEXTVAL('bl_3nf.seq_ce_categories'),
-    COALESCE(prod_category, 'n.a.'),
+    COALESCE(prod_category_code, 'n.a.'),
     COALESCE(prod_category, 'n.a.'),
     'card_orders',
     'src_card_orders',
     CURRENT_DATE,
     CURRENT_DATE
 FROM (
-    SELECT DISTINCT prod_category
+    SELECT DISTINCT prod_category_code, prod_category
     FROM sa_card_orders.src_card_orders
-    WHERE prod_category IS NOT NULL
+    WHERE prod_category_code IS NOT NULL
 ) sc
 WHERE NOT EXISTS (
     SELECT 1
     FROM bl_3nf.ce_categories c
-    WHERE c.category_src_id = sc.prod_category
+    WHERE c.category_src_id = sc.prod_category_code
       AND c.source_system = 'card_orders'
       AND c.source_entity = 'src_card_orders'
 );
@@ -1135,12 +1133,12 @@ SELECT
     'src_cash_orders',
     CURRENT_DATE
 FROM (
-    SELECT DISTINCT prod_code, prod_name, prod_category
+    SELECT DISTINCT prod_code, prod_name, prod_category_code
     FROM sa_cash_orders.src_cash_orders
     WHERE prod_code IS NOT NULL
 ) sc
 LEFT JOIN bl_3nf.ce_categories c
-    ON c.category_src_id = sc.prod_category
+    ON c.category_src_id = sc.prod_category_code
    AND c.source_system = 'cash_orders'
    AND c.source_entity = 'src_cash_orders'
 WHERE NOT EXISTS (
@@ -1180,12 +1178,12 @@ SELECT
     'src_card_orders',
     CURRENT_DATE
 FROM (
-    SELECT DISTINCT prod_code, prod_name, prod_category
+    SELECT DISTINCT prod_code, prod_name, prod_category_code
     FROM sa_card_orders.src_card_orders
     WHERE prod_code IS NOT NULL
 ) sc
 LEFT JOIN bl_3nf.ce_categories c
-    ON c.category_src_id = sc.prod_category
+    ON c.category_src_id = sc.prod_category_code
    AND c.source_system = 'card_orders'
    AND c.source_entity = 'src_card_orders'
 WHERE NOT EXISTS (
@@ -1252,7 +1250,7 @@ LEFT JOIN bl_3nf.ce_points pt
    AND pt.source_system = 'cash_orders'
    AND pt.source_entity = 'src_cash_orders'
 LEFT JOIN bl_3nf.ce_customers c
-    ON c.customer_src_id = sc.cust_phone_number
+    ON c.customer_src_id = 'cash_orders_' || sc.cust_phone_number
    AND c.source_system = 'cash_orders'
    AND c.source_entity = 'src_cash_orders'
 LEFT JOIN bl_3nf.ce_employees e
@@ -1315,7 +1313,7 @@ LEFT JOIN bl_3nf.ce_points pt
    AND pt.source_system = 'card_orders'
    AND pt.source_entity = 'src_card_orders'
 LEFT JOIN bl_3nf.ce_customers c
-    ON c.customer_src_id = sc.cust_phone_number
+    ON c.customer_src_id = 'card_orders_' || sc.cust_phone_number
    AND c.source_system = 'card_orders'
    AND c.source_entity = 'src_card_orders'
 LEFT JOIN bl_3nf.ce_employees e
@@ -1333,5 +1331,3 @@ WHERE NOT EXISTS (
 SELECT * FROM bl_3nf.ce_sales;
 
 COMMIT;
-
-
