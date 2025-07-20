@@ -379,6 +379,28 @@ WHERE
 		product_id = -1
 		AND start_dt = DATE '1990-01-01'
 );
+--ce_channels
+INSERT INTO bl_3nf.ce_channels (
+    channel_id,
+    channel_src_id,
+    channel_name,
+    channel_desc,
+    source_system,
+    source_entity,
+    ta_insert_dt,
+    ta_update_dt
+)
+VALUES (
+    -1,
+    'n.a.',
+    'n.a.',
+    'n.a.',
+    'n.a.',
+    'n.a.',
+    CURRENT_DATE,
+    CURRENT_DATE
+);
+
 
 COMMIT;
 
@@ -395,7 +417,6 @@ COMMIT;
 --SELECT emp_id, emp_src_id, first_name, last_name, dob, personal_id, phone_number, source_system, source_entity, ta_insert_dt, ta_update_dt FROM bl_3nf.ce_employees;
 --SELECT point_id, point_src_id, point_name, address_id, source_system, source_entity, ta_insert_dt, ta_update_dt FROM bl_3nf.ce_points;
 --SELECT product_id, product_src_id, product_name, category_id, start_dt, end_dt, is_active, source_id, source_system, source_entity, ta_insert_dt FROM bl_3nf.ce_products_scd;
---SELECT sales_id, event_dt, product_id, discount_id, product_price, payment_amount, payment_type, point_id, customer_id, employee_id, card_type_id, source_id, source_system, source_entity, ta_insert_dt, ta_update_dt FROM bl_3nf.ce_sales;
 
 
 
@@ -706,7 +727,7 @@ INSERT INTO bl_3nf.ce_cities (
     ta_update_dt
 )
 SELECT 
-    NEXTVAL('bl_3nf.seq_ce_country'),
+    NEXTVAL('bl_3nf.seq_ce_city'),
     COALESCE(sc.point_country, 'n.a.') || '|' || COALESCE(sc.point_city, 'n.a.'),
     COALESCE(sc.point_city, 'n.a.'),
     COALESCE(c.country_id, -1),
@@ -744,7 +765,7 @@ INSERT INTO bl_3nf.ce_cities (
     ta_update_dt
 )
 SELECT 
-    NEXTVAL('bl_3nf.seq_ce_country'),
+    NEXTVAL('bl_3nf.seq_ce_city'),
     COALESCE(sc.point_country, 'n.a.') || '|' || COALESCE(sc.point_city, 'n.a.'),
     COALESCE(sc.point_city, 'n.a.'),
     COALESCE(c.country_id, -1),
