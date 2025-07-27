@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS BL_DM.DIM_EMPLOYEES (
     LAST_NAME VARCHAR(64) NOT NULL,
     DOB_DT DATE NOT NULL,
     PERSONAL_ID VARCHAR(12) NOT NULL UNIQUE,
-    PHONE_NUMBER VARCHAR(15) NOT NULL UNIQUE,
+    PHONE_NUMBER VARCHAR(18) NOT NULL UNIQUE,
     SOURCE_SYSTEM VARCHAR(255) NOT NULL,
     SOURCE_ENTITY VARCHAR(255) NOT NULL,
     TA_INSERT_DT DATE NOT NULL,
@@ -150,6 +150,27 @@ CREATE TABLE IF NOT EXISTS BL_DM.FCT_SALES_DD (
 );
 
 COMMIT;
+
+ALTER TABLE bl_dm.dim_channels
+ADD CONSTRAINT uq_dim_channels_src UNIQUE (channel_src_id, source_system, source_entity);
+
+ALTER TABLE bl_dm.dim_customers
+ADD CONSTRAINT uq_dim_customers_src UNIQUE (customer_src_id, source_system, source_entity);
+
+ALTER TABLE bl_dm.dim_employees
+ADD CONSTRAINT uq_dim_employees_src UNIQUE (personal_id, source_system, source_entity);
+ALTER TABLE bl_dm.dim_employees
+ALTER COLUMN phone_number TYPE VARCHAR(18);
+
+ALTER TABLE bl_dm.dim_discounts
+ADD CONSTRAINT uq_dim_discounts_src UNIQUE (source_id, source_system, source_entity);
+
+ALTER TABLE bl_dm.dim_card_informations
+ADD CONSTRAINT uq_dim_card_informations_src UNIQUE (card_information_src_id, source_system, source_entity);
+
+ALTER TABLE bl_dm.dim_points
+ADD CONSTRAINT uq_dim_points_src UNIQUE (point_src_id, source_system, source_entity);
+
 
 --DEFAULT ROWS
 -- DIM_CUSTOMERS
