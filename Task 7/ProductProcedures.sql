@@ -114,7 +114,7 @@ EXCEPTION
         RAISE;
 END;
 $$;
-
+ 
 CREATE OR REPLACE PROCEDURE bl_cl.p_load_ce_products_scd()
 LANGUAGE plpgsql
 AS
@@ -170,59 +170,70 @@ BEGIN
        AND cat.source_system = 'card_orders'
        AND cat.source_entity = 'src_card_orders';
 
-    -- Update old product as inactive
-    UPDATE bl_3nf.ce_products_scd tgt
-    SET end_dt = CURRENT_DATE - INTERVAL '1 day',
-        is_active = 'N'
-    FROM stg_products stg
-    WHERE tgt.product_src_id = stg.product_src_id
-      AND tgt.is_active = 'Y'
-      AND tgt.source_system = stg.source_system
-      AND tgt.source_entity = stg.source_entity
-      AND (
-        tgt.product_name IS DISTINCT FROM stg.product_name OR
-        tgt.category_id IS DISTINCT FROM stg.category_id
-      );
+    -- Update old records with correct end_dt from new start_dt
+	UPDATE bl_3nf.ce_products_scd tgt
+	SET end_dt = stg.start_dt - INTERVAL '1 day',
+	    is_active = 'N'
+	FROM stg_products stg
+	WHERE tgt.product_src_id = stg.product_src_id
+	  AND tgt.source_system = stg.source_system
+	  AND tgt.source_entity = stg.source_entity
+	  AND tgt.is_active = 'Y'
+	  AND (
+	      tgt.product_name IS DISTINCT FROM stg.product_name OR
+	      tgt.category_id IS DISTINCT FROM stg.category_id
+	  )
+	  AND stg.start_dt > tgt.start_dt;
 
     GET DIAGNOSTICS v_tmp = ROW_COUNT;
     v_rows_updated := v_rows_updated + v_tmp;
 
     -- insertion
-    INSERT INTO bl_3nf.ce_products_scd (
-        product_id,
-        product_src_id,
-        product_name,
-        category_id,
-        start_dt,
-        end_dt,
-        is_active,
-        source_id,
-        source_system,
-        source_entity,
-        ta_insert_dt
-    )
-    SELECT 
-        NEXTVAL('bl_3nf.seq_ce_products_scd'),
-        product_src_id,
-        product_name,
-        category_id,
-        start_dt,
-        end_dt,
-        is_active,
-        source_id,
-        source_system,
-        source_entity,
-        ta_insert_dt
-    FROM (
-        SELECT * ,
-               ROW_NUMBER() OVER (
-                   PARTITION BY product_src_id, product_name, category_id, source_system, source_entity 
-                   ORDER BY ta_insert_dt DESC
-               ) AS rn
-        FROM stg_products
-    ) ranked
-    WHERE rn = 1
-      AND NOT EXISTS (
+	
+	INSERT INTO bl_3nf.ce_products_scd (
+	    product_id,
+	    product_src_id,
+	    product_name,
+	    category_id,
+	    start_dt,
+	    end_dt,
+	    is_active,
+	    source_id,
+	    source_system,
+	    source_entity,
+	    ta_insert_dt
+	)
+	SELECT 
+	    NEXTVAL('bl_3nf.seq_ce_products_scd'),
+	    product_src_id,
+	    product_name,
+	    category_id,
+	    start_dt,
+	    LEAD(start_dt, 1, DATE '9999-12-31') OVER (
+	        PARTITION BY product_src_id, source_system, source_entity
+	        ORDER BY start_dt
+	    ) - INTERVAL '1 day' AS end_dt,
+	    CASE 
+	        WHEN ROW_NUMBER() OVER (
+	            PARTITION BY product_src_id, source_system, source_entity
+	            ORDER BY start_dt DESC
+	        ) = 1 THEN 'Y'
+	        ELSE 'N'
+	    END AS is_active,
+	    source_id,
+	    source_system,
+	    source_entity,
+	    ta_insert_dt
+	FROM (
+	    SELECT * ,
+	           ROW_NUMBER() OVER (
+	               PARTITION BY product_src_id, product_name, category_id, source_system, source_entity 
+	               ORDER BY ta_insert_dt DESC
+	           ) AS rn
+	    FROM stg_products
+	) ranked
+	WHERE rn = 1
+	  AND NOT EXISTS (
 	    SELECT 1
 	    FROM bl_3nf.ce_products_scd tgt
 	    WHERE tgt.product_src_id = ranked.product_src_id
@@ -256,3 +267,4 @@ EXCEPTION
         RAISE;
 END;
 $$;
+
