@@ -1227,6 +1227,7 @@ INSERT INTO bl_3nf.ce_sales (
     product_id,
     discount_id,
     product_price,
+    product_quantity,
     payment_amount,
     payment_type,
     point_id,
@@ -1245,6 +1246,7 @@ SELECT
     COALESCE(p.product_id, -1),
     COALESCE(d.discount_id, -1),
     COALESCE(NULLIF(prod_price, '')::decimal, 0.00),
+    COALESCE(NULLIF(sc.quantity , '')::integer, 0),
     COALESCE(NULLIF(payment_amount, '')::decimal, 0.00),
     'CASH',
     COALESCE(pt.point_id, -1),
@@ -1290,6 +1292,7 @@ INSERT INTO bl_3nf.ce_sales (
     product_id,
     discount_id,
     product_price,
+    product_quantity,
     payment_amount,
     payment_type,
     point_id,
@@ -1308,6 +1311,7 @@ SELECT
     COALESCE(p.product_id, -1),
     COALESCE(d.discount_id, -1),
     COALESCE(NULLIF(prod_price, '')::decimal, 0.00),
+    COALESCE(NULLIF(sc.quantity , '')::integer, 0),
     COALESCE(NULLIF(payment_amount, '')::decimal, 0.00),
     'CARD',
     COALESCE(pt.point_id, -1),
@@ -1349,6 +1353,6 @@ WHERE NOT EXISTS (
       AND s.source_system = 'card_orders'
       AND s.source_entity = 'src_card_orders'
 );
-SELECT * FROM bl_3nf.ce_sales;
+SELECT *z  FROM bl_3nf.ce_sales;
 
 COMMIT;
