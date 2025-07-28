@@ -34,6 +34,8 @@ Employee_phone_number VARCHAR
 format 'csv',
 HEADER 'true' );
 
+ALTER FOREIGN TABLE sa_cash_orders.ext_cash_orders OPTIONS (SET filename 'C:\Program Files\PostgreSQL\17\data\cash_source_2.csv')
+
 --DROP FOREIGN TABLE sa_cash_orders.ext_cash_orders;
 
 --SELECT * FROM sa_card_orders.ext_card_orders eco ;
@@ -69,15 +71,25 @@ Employee_phone_number VARCHAR
 --DROP TABLE sa_cash_orders.src_cash_orders;
 
 --inserting data into src table from external table
-INSERT
-	INTO
-	sa_cash_orders.src_cash_orders
-SELECT DISTINCT --added distinct updated
-	*
-FROM
-	sa_cash_orders.ext_cash_orders ;
+--INSERT
+--	INTO
+--	sa_cash_orders.src_cash_orders
+--SELECT DISTINCT --added distinct updated
+--	*
+--FROM
+--	sa_cash_orders.ext_cash_orders ;
 
-SELECT * FROM sa_cash_orders.ext_cash_orders eco ;
+--INSERT INTO sa_cash_orders.src_cash_orders
+INSERT INTO sa_cash_orders.src_cash_orders
+SELECT DISTINCT *
+FROM sa_cash_orders.ext_cash_orders ext
+WHERE TO_DATE(ext.Order_date, 'YYYY-MM-DD') >
+      COALESCE((
+          SELECT MAX(TO_DATE(src.Order_date, 'YYYY-MM-DD'))
+          FROM sa_cash_orders.src_cash_orders src
+          WHERE src.Order_date IS NOT NULL
+      ), TO_DATE('1900-01-01', 'YYYY-MM-DD'));
+
 
 SELECT * FROM sa_cash_orders.src_cash_orders sco; 
 

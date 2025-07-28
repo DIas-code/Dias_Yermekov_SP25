@@ -41,6 +41,7 @@ Channel_Desc VARCHAR
 format 'csv',
 HEADER 'true' );
 
+ALTER FOREIGN TABLE sa_card_orders.ext_card_orders OPTIONS (SET filename 'C:\Program Files\PostgreSQL\17\data\card_source_2.csv')
 --DROP FOREIGN TABLE sa_card_orders.ext_card_orders;
 
 --SELECT * FROM sa_card_orders.ext_card_orders eco ;
@@ -80,13 +81,23 @@ Channel_Desc VARCHAR
 --DROP TABLE sa_cash_orders.src_car_orders;
 
 --inserting data into src table from external table
-INSERT
-	INTO
-	sa_card_orders.src_card_orders
-SELECT DISTINCT --added distinct updated
-	*
-FROM
-	sa_card_orders.ext_card_orders ;
+--INSERT
+--	INTO
+--	sa_card_orders.src_card_orders
+--SELECT DISTINCT --added distinct updated
+--	*
+--FROM
+--	sa_card_orders.ext_card_orders ;
+
+INSERT INTO sa_card_orders.src_card_orders
+SELECT DISTINCT *
+FROM sa_card_orders.ext_card_orders ext
+WHERE TO_DATE(ext.Order_date, 'YYYY-MM-DD') >
+      COALESCE((
+          SELECT MAX(TO_DATE(src.Order_date, 'YYYY-MM-DD'))
+          FROM sa_card_orders.src_card_orders src
+          WHERE src.Order_date IS NOT NULL
+      ), TO_DATE('1900-01-01', 'YYYY-MM-DD'));
 
 SELECT * FROM sa_card_orders.ext_card_orders eco ;
 
