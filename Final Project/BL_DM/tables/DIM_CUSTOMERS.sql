@@ -1,0 +1,30 @@
+CREATE SCHEMA IF NOT EXISTS BL_DM;
+
+-- DIM_CUSTOMERS: SCD1 table with source triplet; stores customer names and phone numbers.
+
+CREATE SEQUENCE IF NOT EXISTS BL_DM.SEQ_DIM_CUSTOMERS START WITH 1;
+
+CREATE TABLE IF NOT EXISTS BL_DM.DIM_CUSTOMERS (
+    CUSTOMER_ID BIGINT PRIMARY KEY,
+    CUSTOMER_SRC_ID VARCHAR(255) NOT NULL,
+    FIRST_NAME VARCHAR(64) NOT NULL,
+    LAST_NAME VARCHAR(64) NOT NULL,
+    PHONE_NUMBER VARCHAR(22) NOT NULL,
+    SOURCE_SYSTEM VARCHAR(255) NOT NULL,
+    SOURCE_ENTITY VARCHAR(255) NOT NULL,
+    TA_INSERT_DT DATE NOT NULL,
+    TA_UPDATE_DT DATE NOT NULL
+);
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'uq_dim_customers_src'
+    ) THEN
+        ALTER TABLE bl_dm.dim_customers
+        ADD CONSTRAINT uq_dim_customers_src UNIQUE (customer_src_id, source_system, source_entity);
+    END IF;
+    
+END
+$$;

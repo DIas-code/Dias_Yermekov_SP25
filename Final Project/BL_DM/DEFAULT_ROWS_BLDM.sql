@@ -1,0 +1,200 @@
+--DEFAULT ROWS
+-- DIM_CUSTOMERS
+INSERT INTO BL_DM.DIM_CUSTOMERS (
+    CUSTOMER_ID,
+    CUSTOMER_SRC_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    PHONE_NUMBER,
+    SOURCE_SYSTEM,
+    SOURCE_ENTITY,
+    TA_INSERT_DT,
+    TA_UPDATE_DT
+)
+SELECT
+    -1,
+    'n.a.',
+    'n.a.',
+    'n.a.',
+    'n.a.',
+    'manual',
+    'manual',
+    CURRENT_DATE,
+    CURRENT_DATE
+WHERE NOT EXISTS (
+    SELECT 1 FROM BL_DM.DIM_CUSTOMERS WHERE CUSTOMER_ID = -1
+);
+
+-- DIM_DISCOUNTS
+INSERT INTO BL_DM.DIM_DISCOUNTS (
+    DISCOUNT_ID,
+    DISCOUNT_PERCENTAGE,
+    DISCOUNT_DATE,
+    SOURCE_ID,
+    SOURCE_SYSTEM,
+    SOURCE_ENTITY,
+    TA_INSERT_DT,
+    TA_UPDATE_DT
+)
+SELECT
+    -1,
+    0.00,
+    DATE '1990-01-01',
+    'n.a.',
+    'manual',
+    'manual',
+    CURRENT_DATE,
+    CURRENT_DATE
+WHERE NOT EXISTS (
+    SELECT 1 FROM BL_DM.DIM_DISCOUNTS WHERE DISCOUNT_ID = -1
+);
+
+-- DIM_EMPLOYEES
+INSERT INTO BL_DM.DIM_EMPLOYEES (
+    EMP_ID,
+    EMP_SRC_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    DOB_DT,
+    PERSONAL_ID,
+    PHONE_NUMBER,
+    SOURCE_SYSTEM,
+    SOURCE_ENTITY,
+    TA_INSERT_DT,
+    TA_UPDATE_DT
+)
+SELECT
+    -1,
+    'n.a.',
+    'n.a.',
+    'n.a.',
+    DATE '1990-01-01',
+    'n.a.',
+    'n.a.',
+    'manual',
+    'manual',
+    CURRENT_DATE,
+    CURRENT_DATE
+WHERE NOT EXISTS (
+    SELECT 1 FROM BL_DM.DIM_EMPLOYEES WHERE EMP_ID = -1
+);
+
+-- DIM_POINTS
+INSERT INTO BL_DM.DIM_POINTS (
+    POINT_ID,
+    POINT_SRC_ID,
+    POINT_NAME,
+    POINT_ADDRESS_ID,
+    POINT_ADDRESS,
+    POINT_CITY_ID,
+    POINT_CITY_NAME,
+    POINT_COUNTRY_ID,
+    POINT_COUNTRY_NAME,
+    SOURCE_SYSTEM,
+    SOURCE_ENTITY,
+    TA_INSERT_DT,
+    TA_UPDATE_DT
+)
+SELECT
+    -1,
+    'n.a.',
+    'n.a.',
+    -1,
+    'n.a.',
+    -1,
+    'n.a.',
+    -1,
+    'n.a.',
+    'manual',
+    'manual',
+    CURRENT_DATE,
+    CURRENT_DATE
+WHERE NOT EXISTS (
+    SELECT 1 FROM BL_DM.DIM_POINTS WHERE POINT_ID = -1
+);
+
+-- DIM_CARD_INFORMATIONS
+INSERT INTO BL_DM.DIM_CARD_INFORMATIONS (
+    CARD_INFORMATION_ID,
+    CARD_INFORMATION_SRC_ID,
+    CARD_BANK_ID,
+    CARD_BANK_NAME,
+    CARD_TYPE_ID,
+    CARD_TYPE_NAME,
+    SOURCE_SYSTEM,
+    SOURCE_ENTITY,
+    TA_INSERT_DT,
+    TA_UPDATE_DT
+)
+SELECT
+    -1,
+    'n.a.',
+    -1,
+    'n.a.',
+    -1,
+    'n.a.',
+    'manual',
+    'manual',
+    CURRENT_DATE,
+    CURRENT_DATE
+WHERE NOT EXISTS (
+    SELECT 1 FROM BL_DM.DIM_CARD_INFORMATIONS WHERE CARD_INFORMATION_ID = -1
+);
+
+-- DIM_CHANNELS
+INSERT INTO BL_DM.DIM_CHANNELS (
+    CHANNEL_ID,
+    CHANNEL_SRC_ID,
+    CHANNEL_NAME,
+    CHANNEL_DESC,
+    SOURCE_SYSTEM,
+    SOURCE_ENTITY,
+    TA_INSERT_DT,
+    TA_UPDATE_DT
+)
+SELECT
+    -1,
+    'n.a.',
+    'n.a.',
+    'n.a.',
+    'manual',
+    'manual',
+    CURRENT_DATE,
+    CURRENT_DATE
+WHERE NOT EXISTS (
+    SELECT 1 FROM BL_DM.DIM_CHANNELS WHERE CHANNEL_ID = -1
+);
+
+-- DIM_PRODUCTS_SCD (SCD2)
+INSERT INTO BL_DM.DIM_PRODUCTS_SCD (
+    PRODUCT_ID,
+    PRODUCT_SRC_ID,
+    PRODUCT_NAME,
+    PRODUCT_CATEGORY_ID,
+    PRODUCT_CATEGORY_NAME,
+    START_DT,
+    END_DT,
+    IS_ACTIVE,
+    SOURCE_ID,
+    SOURCE_SYSTEM,
+    SOURCE_ENTITY,
+    TA_INSERT_DT
+)
+SELECT
+    -1,
+    'n.a.',
+    'n.a.',
+    -1,
+    'n.a.',
+    DATE '1990-01-01',
+    DATE '2999-12-31',
+    'Y',
+    'n.a.',
+    'manual',
+    'manual',
+    CURRENT_DATE
+WHERE NOT EXISTS (
+    SELECT 1 FROM BL_DM.DIM_PRODUCTS_SCD
+    WHERE PRODUCT_ID = -1 AND START_DT = DATE '1990-01-01'
+);
+COMMIT ;
