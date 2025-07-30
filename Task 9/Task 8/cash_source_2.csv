@@ -1,7 +1,0 @@
-Order_ID,Order_date,Prod_Code,Prod_name,Category_Code,Prod_category,Prod_Price,Quantity,Discount_percentage,Discount_date,Payment_Amount,Payment_Type,Point_name,Point_address,Point_city,Point_country,Cust_first_name,Cust_last_name,Cust_phone_number,Employee_first_name,Employee_last_name,Employee_DOB,Employee_personal_ID,Employee_phone_number
-ORD-500001,2025-02-23,P006,Sandwich burger,C002,Fastfood2,31.0,5,0.0,,155.0,Cash,Balaji_2,Abay 99,Almaty,Kazakhstan,Teresa,Freeman,613.438.2689x81501,Olga,Sidorova,1992-06-17,EMP008,87040000008
-ORD-500002,2025-02-23,P005,Panipuri,C002,Fastfood2,19.0,2,0.0,,38.0,Cash,Balaji_2,Abay 99,Almaty,Kazakhstan,Anna,Patton,001-266-408-7514x9842,Nikolay,Smirnov,1988-11-30,EMP007,87030000007
-ORD-500003,2025-02-23,P003,Frankie,C002,Fastfood2,66.0,5,0.0,,330.0,Cash,Balaji_1,Satpaeva 127,Atyrau,Kazakhstan,David,Davis,687-424-7423x0800,Maria,Petrova,1990-07-21,EMP006,87020000006
-ORD-500004,2025-02-23,P005,Panipuri,C002,Fastfood2,19.0,10,0.0,,190.0,Cash,Balaji_1,Satpaeva 127,Atyrau,Kazakhstan,Mario,Griffin,001-453-937-5978x6611,Maria,Petrova,1990-07-21,EMP006,87020000006
-ORD-500005,2025-02-28,P006,Sandwich burger,C002,Fastfood2,31.0,2,0.0,,62.0,Cash,Balaji_1,Satpaeva 127,Atyrau,Kazakhstan,Peter,Meyer,683.393.1291x8631,Alex,Ivanov,1985-03-15,EMP005,87010000005
-ORD-500006,2025-02-28,P007,Sugarcane juice,C001,Beverages,29.0,5,0.0,,145.0,Cash,Balaji_1,Satpaeva 127,Atyrau,Kazakhstan,Tyler,Duffy,525-287-3036x77950,Alex,Ivanov,1985-03-15,EMP005,87010000005
