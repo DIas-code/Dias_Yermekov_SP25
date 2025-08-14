@@ -32,7 +32,7 @@ WHERE
 		customer_id = -1
 );
 
-SELECT * FROM bl_cl.etl_log e ;
+--SELECT * FROM bl_cl.etl_log e ;
 --ce_discounts
 INSERT
 	INTO

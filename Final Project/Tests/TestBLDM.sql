@@ -20,7 +20,7 @@ CALL bl_cl.p_load_dim_channels();
 --SELECT * FROM bl_dm.dim_channels;
 
 CALL bl_cl.p_load_dim_customers();
---SELECT * FROM bl_dm.dim_customers;
+--SELECT count(*) FROM bl_dm.dim_customers;
 
 CALL bl_cl.p_load_dim_employees();
 --SELECT * FROM bl_dm.dim_employees;
@@ -35,15 +35,15 @@ CALL bl_cl.p_load_dim_points();
 --SELECT * FROM bl_dm.dim_points;
 
 CALL bl_cl.p_load_dim_products_scd();
---SELECT * FROM bl_dm.dim_products_scd ORDER BY product_src_id, start_dt;
-
-
-
-CALL bl_cl.p_load_fct_sales_dd();
-SELECT * FROM bl_dm.fct_sales_dd f ;
-
+SELECT * FROM bl_dm.dim_products_scd ORDER BY product_src_id, start_dt;
 
 CALL bl_cl.p_load_dim_dates();
+
+CALL bl_cl.p_load_fct_sales_dd();
+SELECT COUNT(*) FROM bl_dm.fct_sales_dd f ;
+
+
+
 
 -- check logs
 SELECT *

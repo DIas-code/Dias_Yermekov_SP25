@@ -41,7 +41,7 @@ Channel_Desc VARCHAR
 format 'csv',
 HEADER 'true' );
 
-ALTER FOREIGN TABLE sa_card_orders.ext_card_orders OPTIONS (SET filename 'C:\Program Files\PostgreSQL\17\data\card_source.csv')
+ALTER FOREIGN TABLE sa_card_orders.ext_card_orders OPTIONS (SET filename 'C:\Program Files\PostgreSQL\17\data\card_source_2.csv')
 --DROP FOREIGN TABLE sa_card_orders.ext_card_orders;
 
 --SELECT * FROM sa_card_orders.ext_card_orders eco ;

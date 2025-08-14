@@ -42,7 +42,7 @@ CREATE TABLE bl_3nf.ce_channels (
 	source_system varchar(255) NOT NULL,
 	source_entity varchar(255) NOT NULL,
 	ta_insert_dt date NOT NULL,
-	ta_update_dt date NOT NULL,
+	ta_update_dt date NOT NULL
 );
 -- CE_EMPLOYEES: SCD1 table with source triplet;
 -- stores employee personal details including unique personal ID and phone.

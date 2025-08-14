@@ -25,7 +25,7 @@ BEGIN
         ta_insert_dt,
         ta_update_dt
     )
-    SELECT
+    SELECT DISTINCT ON (s.sales_id, da.date_id)
         s.sales_id,
         da.date_id,
         p.product_id,
@@ -84,13 +84,14 @@ BEGIN
        AND ch.source_system = ch3nf.source_system
        AND ch.source_entity = ch3nf.source_entity
     WHERE NOT EXISTS (
-        SELECT 1
-        FROM bl_dm.fct_sales_dd f
-        WHERE f.sales_id = s.sales_id
-          AND f.source_id = s.source_id
-          AND f.source_system = s.source_system
-          AND f.source_entity = s.source_entity
-    );
+	    SELECT 1
+	    FROM bl_dm.fct_sales_dd f
+	    WHERE f.sales_id = s.sales_id
+	      AND f.event_dt = da.date_id
+	      AND f.source_id = s.source_id
+	      AND f.source_system = s.source_system
+	      AND f.source_entity = s.source_entity
+	);
 
     -- count rows
     GET DIAGNOSTICS v_rows_inserted = ROW_COUNT;

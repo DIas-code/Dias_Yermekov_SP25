@@ -12,32 +12,32 @@ BEGIN
 
     -- update only changed products
 	WITH changed_rows AS (
-    SELECT
-        tgt.product_id,
-        COALESCE(cat.ta_update_dt, src.start_dt) AS actual_start_dt
-    FROM bl_dm.dim_products_scd tgt
-    JOIN bl_3nf.ce_products_scd src
-      ON tgt.product_src_id = src.product_src_id
-     AND tgt.source_system = src.source_system
-     AND tgt.source_entity = src.source_entity
-     AND tgt.is_active = 'Y'
-    LEFT JOIN bl_3nf.ce_categories cat
-      ON src.category_id = cat.category_id
-     AND src.source_system = cat.source_system
-     AND src.source_entity = cat.source_entity
-    WHERE
-        tgt.product_name IS DISTINCT FROM src.product_name OR
-        tgt.product_category_id IS DISTINCT FROM src.category_id OR
-        tgt.product_category_name IS DISTINCT FROM COALESCE(cat.category_name, 'n.a.')
+	    SELECT
+	        tgt.product_id,
+	        src.start_dt AS new_start_dt
+	    FROM bl_dm.dim_products_scd tgt
+	    JOIN bl_3nf.ce_products_scd src
+	      ON tgt.product_src_id = src.product_src_id
+	     AND tgt.source_system = src.source_system
+	     AND tgt.source_entity = src.source_entity
+	     AND tgt.is_active = 'Y'
+	    LEFT JOIN bl_3nf.ce_categories cat
+	      ON src.category_id = cat.category_id
+	     AND src.source_system = cat.source_system
+	     AND src.source_entity = cat.source_entity
+	    WHERE
+	        tgt.product_name IS DISTINCT FROM src.product_name
+	        OR tgt.product_category_id IS DISTINCT FROM src.category_id
+	        OR tgt.product_category_name IS DISTINCT FROM COALESCE(cat.category_name, 'n.a.')
 	)
 	UPDATE bl_dm.dim_products_scd tgt
 	SET
-	    end_dt = cr.actual_start_dt - INTERVAL '1 day',
+	    end_dt = cr.new_start_dt - INTERVAL '1 day',
 	    is_active = 'N',
 	    ta_insert_dt = CURRENT_DATE
 	FROM changed_rows cr
 	WHERE tgt.product_id = cr.product_id
-	  AND cr.actual_start_dt - INTERVAL '1 day' >= tgt.start_dt;
+	  AND cr.new_start_dt - INTERVAL '1 day' >= tgt.start_dt;
 
 
     -- insert new rows

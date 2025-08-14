@@ -34,7 +34,7 @@ Employee_phone_number VARCHAR
 format 'csv',
 HEADER 'true' );
 
-ALTER FOREIGN TABLE sa_cash_orders.ext_cash_orders OPTIONS (SET filename 'C:\Program Files\PostgreSQL\17\data\cash_source.csv')
+ALTER FOREIGN TABLE sa_cash_orders.ext_cash_orders OPTIONS (SET filename 'C:\Program Files\PostgreSQL\17\data\cash_source_2.csv')
 
 --DROP FOREIGN TABLE sa_cash_orders.ext_cash_orders;
 
