@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","15","test_smoke_queries[Completeness check for Products table]","","2025-09-20","passed","2025-09-20","","db_test","",""
+"","15","test_smoke_queries[Completeness check for Sales table]","","2025-09-20","failed","2025-09-20","","db_test","",""
+"","5","test_smoke_queries[Completeness check for Locations table]","","2025-09-20","passed","2025-09-20","","db_test","",""

@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","43","test_critical_queries[Accuracy check for Sales Quantity]","","2025-09-20","failed","2025-09-20","","db_test","",""
+"","68","test_critical_queries[Accuracy check for Sales Revenue]","","2025-09-20","failed","2025-09-20","","db_test","",""
+"","28","test_critical_queries[Consistency check for Missing Clients]","","2025-09-20","passed","2025-09-20","","db_test","",""
