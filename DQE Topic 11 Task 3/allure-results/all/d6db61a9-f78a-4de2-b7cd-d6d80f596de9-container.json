@@ -1,0 +1,1 @@
+{"uuid": "f58cbbb2-657a-4707-bd1b-0556b572bc8d", "children": ["7ce4c648-f189-4b31-b8c3-3c9d190ed423"], "befores": [{"name": "dwh_cur", "status": "passed", "start": 1758383251654, "stop": 1758383251654}], "afters": [{"name": "dwh_cur::0", "status": "passed", "start": 1758383251721, "stop": 1758383251721}], "start": 1758383251654, "stop": 1758383251721}

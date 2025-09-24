@@ -1,0 +1,104 @@
+tests:
+  - name: Completeness check for Products table
+    sql: |
+      with lnd_counts as (
+          select count(distinct product_id) as s1_cnt from lnd.lnd_s1_products
+      ),
+      lnd_counts2 as (
+          select count(distinct product_id) as s2_cnt from lnd.lnd_s2_client_sales
+      ),
+      dwh_counts as (
+          select count(distinct product_id) as dwh_cnt from dwh.dwh_products
+      )
+      select 
+          (select s1_cnt from lnd_counts) as s1_cnt,
+          (select s2_cnt from lnd_counts2) as s2_cnt,
+          (select s1_cnt from lnd_counts) + (select s2_cnt from lnd_counts2) as total_lnd_products,
+          (select dwh_cnt from dwh_counts) as dwh_cnt,
+          ((select s1_cnt from lnd_counts) + (select s2_cnt from lnd_counts2)) - (select dwh_cnt from dwh_counts) as diff;
+    expected: 0
+
+  - name: Completeness check for Locations table
+    sql: |
+      with lnd_counts as (
+          select count(distinct location_id) as s2_cnt from lnd.lnd_s2_locations
+      ),
+      dwh_counts as (
+          select count(distinct location_id) as dwh_cnt 
+          from dwh.dwh_locations
+          where location_src_id <> 'N/A' and location_src_id <> 'NA'
+      )
+      select
+          (select s2_cnt from lnd_counts) as lnd_s2_cnt,
+          (select dwh_cnt from dwh_counts) as dwh_cnt,
+          ((select s2_cnt from lnd_counts) - (select dwh_cnt from dwh_counts)) as diff;
+    expected: 0
+
+  - name: Completeness check for Sales table
+    sql: |
+      with lnd_counts_s1 as (
+          select count(*) as s1_cnt from lnd.lnd_s1_sales
+      ),
+      lnd_counts_s2 as (
+          select count(*) as s2_cnt from lnd.lnd_s2_client_sales
+      ),
+      dwh_counts as (
+          select count(*) as dwh_cnt from dwh.dwh_sales
+      )
+      select
+          (select s1_cnt from lnd_counts_s1) as s1_cnt,
+          (select s2_cnt from lnd_counts_s2) as s2_cnt,
+          (select s1_cnt from lnd_counts_s1) + (select s2_cnt from lnd_counts_s2) as total_lnd_sales,
+          (select dwh_cnt from dwh_counts) as dwh_cnt,
+          ((select s1_cnt from lnd_counts_s1) + (select s2_cnt from lnd_counts_s2)) - (select dwh_cnt from dwh_counts) as diff;
+    expected: 0
+
+  - name: Accuracy check for Sales Quantity
+    sql: |
+      WITH s1 AS (
+        SELECT COALESCE(SUM(units::integer),0) AS s1_units FROM lnd.lnd_s1_sales
+      ),
+      s2 AS (
+        SELECT COALESCE(SUM(product_amount::integer),0) AS s2_units FROM lnd.lnd_s2_client_sales
+      ),
+      dwh AS (
+        SELECT COALESCE(SUM(quantity),0) AS dwh_units FROM dwh.dwh_sales
+      )
+      SELECT s1.s1_units, s2.s2_units,
+             (s1.s1_units + s2.s2_units) AS src_total,
+             dwh.dwh_units as dwh_units,
+             (s1.s1_units + s2.s2_units) - dwh.dwh_units AS diff
+      FROM s1, s2, dwh;
+    expected: 0
+
+  - name: Accuracy check for Sales Revenue
+    sql: |
+      WITH s1 AS (
+        SELECT COALESCE(SUM(s.units::decimal(10,2) * p.cost::decimal(10,2)),0) AS s1_revenue
+        FROM lnd.lnd_s1_sales s
+        JOIN lnd.lnd_s1_products p ON s.product_id = p.product_id
+      ),
+      s2 AS (
+        SELECT COALESCE(SUM(product_price::decimal(10,2) * product_amount::decimal(10,2)),0) AS s2_revenue
+        FROM lnd.lnd_s2_client_sales
+      ),
+      dwh AS (
+        SELECT COALESCE(SUM(s.quantity * p.product_cost),0) AS dwh_revenue
+        FROM dwh.dwh_sales s
+        JOIN dwh.dwh_products p ON s.product_id = p.product_id
+      )
+      SELECT s1.s1_revenue, s2.s2_revenue,
+             (s1.s1_revenue + s2.s2_revenue) AS src_total,
+             dwh.dwh_revenue,
+             (s1.s1_revenue + s2.s2_revenue) - dwh.dwh_revenue AS diff
+      FROM s1, s2, dwh;
+    expected: 0
+
+  - name: Consistency check for Missing Clients
+    sql: |
+      SELECT COUNT(*) AS missing_clients
+      FROM dwh.dwh_sales s
+      LEFT JOIN dwh.dwh_clients c 
+             ON s.client_id = c.client_id
+      WHERE c.client_id IS NULL;
+    expected: 0
