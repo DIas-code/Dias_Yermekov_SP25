@@ -1,8 +1,3 @@
 venv/
 __pycache__/
 .idea/
-*.wav
-*.log
-*.tmp
-*.pytest_cache/
-.DS_Store
