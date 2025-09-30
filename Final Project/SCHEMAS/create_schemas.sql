@@ -1,0 +1,18 @@
+-- DROP SCHEMA bl_3nf;
+
+CREATE SCHEMA IF NOT EXISTS bl_3nf;
+
+-- DROP SCHEMA bl_dm;
+
+CREATE SCHEMA IF NOT EXISTS bl_dm;
+
+-- DROP SCHEMA sa_card_orders;
+
+CREATE SCHEMA IF NOT EXISTS sa_card_orders;
+
+-- DROP SCHEMA sa_cash_orders;
+
+CREATE SCHEMA IF NOT EXISTS sa_cash_orders ;
+
+
+CREATE SCHEMA IF NOT EXISTS bl_cl;

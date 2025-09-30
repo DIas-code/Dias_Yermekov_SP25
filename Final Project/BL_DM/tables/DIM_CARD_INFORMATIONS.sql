@@ -1,0 +1,31 @@
+CREATE SCHEMA IF NOT EXISTS BL_DM;
+
+-- DIM_CARD_INFORMATION: SCD1 table with source triplet; combines bank and card type info for card-based transactions.
+
+CREATE SEQUENCE IF NOT EXISTS BL_DM.SEQ_DIM_CARD_INFORMATION START WITH 1;
+
+CREATE TABLE IF NOT EXISTS BL_DM.DIM_CARD_INFORMATIONS (
+    CARD_INFORMATION_ID BIGINT PRIMARY KEY,
+    CARD_INFORMATION_SRC_ID VARCHAR(255) NOT NULL,
+    CARD_BANK_ID BIGINT NOT NULL,
+    CARD_BANK_NAME VARCHAR(64) NOT NULL,
+    CARD_TYPE_ID BIGINT NOT NULL,
+    CARD_TYPE_NAME VARCHAR(64)NOT NULL,
+    SOURCE_SYSTEM VARCHAR(255) NOT NULL,
+    SOURCE_ENTITY VARCHAR(255) NOT NULL,
+    TA_INSERT_DT DATE NOT NULL,
+    TA_UPDATE_DT DATE NOT NULL
+);
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'uq_dim_card_informations_src'
+    ) THEN
+        ALTER TABLE bl_dm.dim_card_informations
+        ADD CONSTRAINT uq_dim_card_informations_src UNIQUE (card_information_src_id, source_system, source_entity);
+    END IF;
+
+END
+$$;

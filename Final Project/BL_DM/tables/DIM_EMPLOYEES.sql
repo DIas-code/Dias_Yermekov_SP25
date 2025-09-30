@@ -1,0 +1,34 @@
+CREATE SCHEMA IF NOT EXISTS BL_DM;
+
+-- DIM_EMPLOYEES: SCD1 table with source triplet;
+-- stores employee personal details including unique personal ID and phone.
+
+CREATE SEQUENCE IF NOT EXISTS BL_DM.SEQ_DIM_EMPLOYEES START WITH 1;
+
+CREATE TABLE IF NOT EXISTS BL_DM.DIM_EMPLOYEES (
+    EMP_ID BIGINT PRIMARY KEY,
+    EMP_SRC_ID VARCHAR(255) NOT NULL,
+    FIRST_NAME VARCHAR(64) NOT NULL,
+    LAST_NAME VARCHAR(64) NOT NULL,
+    DOB_DT DATE NOT NULL,
+    PERSONAL_ID VARCHAR(12) NOT NULL UNIQUE,
+    PHONE_NUMBER VARCHAR(18) NOT NULL UNIQUE,
+    SOURCE_SYSTEM VARCHAR(255) NOT NULL,
+    SOURCE_ENTITY VARCHAR(255) NOT NULL,
+    TA_INSERT_DT DATE NOT NULL,
+    TA_UPDATE_DT DATE NOT NULL
+);
+
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'uq_dim_employees_src'
+    ) THEN
+        ALTER TABLE bl_dm.dim_employees
+        ADD CONSTRAINT uq_dim_employees_src UNIQUE (personal_id, source_system, source_entity);
+    END IF;
+
+END
+$$;
